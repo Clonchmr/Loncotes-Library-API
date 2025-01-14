@@ -30,6 +30,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+//makes swagger work
 app.MapGet("/", () => { return Results.Redirect("/swagger"); });
 
 //------------->Materials<-----------------
@@ -336,6 +337,50 @@ app.MapGet("/api/checkouts/overdue", (LoncotesLibraryDbContext db) =>
         ReturnDate = co.ReturnDate
     })
     .ToList();
+});
+
+app.MapGet("/api/checkouts", (LoncotesLibraryDbContext db) =>
+{
+    return db.Checkouts
+    .Include(c => c.Patron)
+    .Include(c => c.Material)
+    .ThenInclude(m => m.MaterialType)
+    .Include(c => c.Material)
+    .ThenInclude(c => c.Genre)
+    .Select(c => new CheckoutDTO
+    {
+        Id = c.Id,
+        MaterialId = c.MaterialId,
+        Material = new MaterialDTO
+        {
+            Id = c.Material.Id,
+            MaterialName = c.Material.MaterialName,
+            MaterialTypeId = c.Material.MaterialTypeId,
+            MaterialType = new MaterialTypeDTO
+            {
+                Id = c.Material.MaterialType.Id,
+                Name = c.Material.MaterialType.Name,
+                CheckoutDays = c.Material.MaterialType.CheckoutDays
+            },
+            GenreId = c.Material.GenreId,
+            Genre = new GenreDTO
+            {
+                Id = c.Material.Genre.Id,
+                Name = c.Material.Genre.Name
+            } 
+        },
+        PatronId = c.PatronId,
+        Patron = new PatronDTO
+        {
+            FirstName = c.Patron.FirstName,
+            LastName = c.Patron.LastName,
+            Address = c.Patron.Address,
+            Email = c.Patron.Email,
+            IsActive = c.Patron.IsActive
+        },
+        CheckoutDate = c.CheckoutDate,
+        ReturnDate = c.ReturnDate
+    });
 });
 
 app.Run();

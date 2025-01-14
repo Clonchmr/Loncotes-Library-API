@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { GetPatron } from "../../data/patronData";
 import { Table } from "reactstrap";
+import "../../../styles/patrons.css";
 
 export const PatronDetails = () => {
   const [patronDetails, setPatronDetails] = useState({});

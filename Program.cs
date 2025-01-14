@@ -256,6 +256,21 @@ app.MapPost("/api/patrons/{id}/deactivate", (LoncotesLibraryDbContext db, int id
     return Results.NoContent();
 });
 
+app.MapPost("/api/patrons/{id}/activate", (LoncotesLibraryDbContext db, int id) =>
+{
+    Patron patronToActivate = db.Patrons.SingleOrDefault(p => p.Id == id);
+
+    if(patronToActivate == null)
+    {
+        return Results.NotFound();
+    }
+
+    patronToActivate.IsActive = true;
+
+    db.SaveChanges();
+    return Results.NoContent();
+});
+
 //------------>Checkouts<------------
 app.MapPost("/api/checkouts", (LoncotesLibraryDbContext db, Checkout checkout) =>
 {

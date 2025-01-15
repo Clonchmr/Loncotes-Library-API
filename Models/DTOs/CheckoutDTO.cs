@@ -23,7 +23,7 @@ public class CheckoutWithLateFeeDTO
     public PatronDTO Patron { get; set; }
     public DateTime CheckoutDate{ get; set; } 
     public DateTime? ReturnDate { get; set; }
-    private static readonly decimal _lateFeePerDay = .50M;
+    private static decimal _lateFeePerDay = .50M;
     public decimal? LateFee 
     {
         get

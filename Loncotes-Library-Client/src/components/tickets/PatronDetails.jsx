@@ -4,6 +4,15 @@ import { GetPatron } from "../../data/patronData";
 import { Table } from "reactstrap";
 import "../../../styles/patrons.css";
 
+export const getBalanceAsDollars = (balance) => {
+  if (balance != null) {
+    const formattedNumber = new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+    }).format(balance);
+    return formattedNumber;
+  }
+};
 export const PatronDetails = () => {
   const [patronDetails, setPatronDetails] = useState({});
   const { id } = useParams();
@@ -11,16 +20,6 @@ export const PatronDetails = () => {
   useEffect(() => {
     GetPatron(id).then(setPatronDetails);
   }, []);
-
-  const getBalanceAsDollars = (balance) => {
-    if (balance != null) {
-      const formattedNumber = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(balance);
-      return formattedNumber;
-    }
-  };
 
   return (
     <div className="container">
